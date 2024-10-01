@@ -1,0 +1,9 @@
+# git
+git clone https://github.com/A01794892-tec-mx/MLOpsEq21.git
+
+
+#cmd
+cd <directorio_local>
+python -m venv MLOpsEq21_venv
+.\MLOpsEq21_venv\Scripts\activate
+pip install -r requirements.txt
