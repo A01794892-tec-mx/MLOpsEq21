@@ -2,8 +2,10 @@
 git clone https://github.com/A01794892-tec-mx/MLOpsEq21.git
 
 
-#cmd
+#cmd !!!Run as administrator
 cd <directorio_local>
 python -m venv MLOpsEq21_venv
 .\MLOpsEq21_venv\Scripts\activate
 pip install -r requirements.txt
+cd mlops
+docker-compose --env-file config.env up -d --build
