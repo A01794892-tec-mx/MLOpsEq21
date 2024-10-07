@@ -1,1 +1,3 @@
 MLOpsEq21_venv/
+.vscode
+mlops/minio_data/
