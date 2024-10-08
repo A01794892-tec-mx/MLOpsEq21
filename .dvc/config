@@ -1,0 +1,4 @@
+[core]
+    remote = s3remoteteam
+['remote "s3remoteteam"']
+    url = s3://tecmlopsbucket
