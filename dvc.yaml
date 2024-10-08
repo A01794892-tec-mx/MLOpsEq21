@@ -7,4 +7,4 @@ stages:
     params:
     - base
     outs:
-    - data_dvc/processed/Algerian_forest_fires_dataset_clean.csv
+    - data/processed/Algerian_forest_fires_dataset_clean.csv
