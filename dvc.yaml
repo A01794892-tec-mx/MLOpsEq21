@@ -1,37 +1,9 @@
 stages:
-  prepare_data:
-    cmd:
-    
-    deps:
 
+  data_cleanup:
+    cmd: python src/stages/data_cleanup.py --config=params.yaml
     params:
     - base
     - data_cleanup
     outs:
-
-  data_split:
-    cmd:
-    
-    deps:
-
-    params:
-    - base
-    outs:
-
-  train_model:
-    cmd:
-    
-    deps:
-
-    params:
-    - base
-    outs:
-
-  evaluate_model:
-    cmd:
-    
-    deps:
-
-    params:
-    - base
-    outs:
+    - data/processed/Algerian_forest_fires_dataset_clean.csv
