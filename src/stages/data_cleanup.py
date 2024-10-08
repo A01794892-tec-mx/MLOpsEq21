@@ -3,6 +3,7 @@ from typing import Text
 import yaml
 import pandas as pd
 
+
 def data_cleanup(config_path: Text) -> None:
     with open(config_path) as conf_file:
         config = yaml.safe_load(conf_file)
