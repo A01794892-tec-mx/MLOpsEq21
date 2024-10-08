@@ -1,0 +1,12 @@
+schema: '2.0'
+stages:
+  data_cleanup:
+    cmd: python src/stages/data_cleanup.py --config=params.yaml
+    params:
+      params.yaml:
+        base:
+          random_state: 42
+          log_level: INFO
+        data_cleanup:
+          dataset_algerian_forest_fires: data/interim/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
+          dataset_algerian_forest_fires_clean: data/processed/Algerian_forest_fires_dataset_clean.csv

@@ -4,6 +4,5 @@ stages:
     cmd: python src/stages/data_cleanup.py --config=params.yaml
     params:
     - base
-    - data_cleanup
     outs:
-    - data/processed/Algerian_forest_fires_dataset_clean.csv
+    - data_dvc/processed/Algerian_forest_fires_dataset_clean.csv
