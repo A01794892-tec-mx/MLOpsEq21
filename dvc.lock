@@ -1,0 +1,19 @@
+schema: '2.0'
+stages:
+  data_cleanup:
+    cmd: python src/stages/data_cleanup.py --config=params.yaml
+    deps:
+    - path: data/interim/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
+      hash: md5
+      md5: dc4733640124d3065da11677953a0703
+      size: 17311
+    params:
+      params.yaml:
+        base:
+          random_state: 42
+          log_level: INFO
+    outs:
+    - path: data/processed/Algerian_forest_fires_dataset_clean.csv
+      hash: md5
+      md5: 6445fabc896e1f8247225eebf4c0c10c
+      size: 18271
