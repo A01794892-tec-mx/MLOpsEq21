@@ -1,0 +1,37 @@
+stages:
+  prepare_data:
+    cmd:
+    
+    deps:
+
+    params:
+    - base
+    - data_cleanup
+    outs:
+
+  data_split:
+    cmd:
+    
+    deps:
+
+    params:
+    - base
+    outs:
+
+  train_model:
+    cmd:
+    
+    deps:
+
+    params:
+    - base
+    outs:
+
+  evaluate_model:
+    cmd:
+    
+    deps:
+
+    params:
+    - base
+    outs:
