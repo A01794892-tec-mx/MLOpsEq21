@@ -7,6 +7,37 @@ data_cleanup:
   dataset_algerian_forest_fires_clean: 'data/processed/Algerian_forest_fires_dataset_clean.csv'
 
 data:
-  raw: 'data/raw/Algerian_forest_fires_dataset_UPDATE.csv'
-  interdim: 'data/interim/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv"'
+  raw: 'data/raw/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv'
+  interim: 'data/interim/input_forest_fires.csv'
   processed: 'data/processed/proccessed_forest_fires.csv'
+
+
+data_load:
+  in: 'data/raw/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv'
+  out: 'data/interim/input_forest_fires.csv'
+
+data_preproc:
+  in: 'data/interim/input_forest_fires.csv'
+  out_X_train: 'data/processed/X_train.csv'
+  out_X_test: 'data/processed/X_test.csv'
+  out_y_train: 'data/processed/y_train.csv'
+  out_y_test: 'data/processed/y_test.csv'
+
+train_lr:
+  in_X_train: 'data/processed/X_train.csv'
+  in_y_train: 'data/processed/y_train.csv'
+
+  model_LR:
+    penalty: 'l2'
+    C: 100
+    solver: 'liblinear'
+    max_iter: 1000
+    random_state: 55
+    out: 'models/modelLR.pkl'
+
+evaluate_model:
+  model: 'models/modelLR.pkl'
+  in_X_train: 'data/processed/X_train.csv'
+  in_X_test: 'data/processed/X_test.csv'
+  in_y_train: 'data/processed/y_train.csv'
+  in_y_test: 'data/processed/y_test.csv'

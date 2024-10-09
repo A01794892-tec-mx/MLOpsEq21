@@ -1,13 +1,51 @@
 stages:
   load_data:
-    cmd: python src/load_data.py --config=params.yml
+    cmd: python src/load_data.py --config=params.yaml
     params:
-    - data
+    - data_load
     deps:
       - src/load_data.py
-      - data/interdim/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
+      - ${data_load.in}
     outs:
-      - data/processed/proccessed_forest_fires.csv
+      - ${data_load.out}
+
+  preprocess_data:
+    cmd: python src/preprocess_data.py --config=params.yaml
+    params:
+    - data_preproc
+    deps:
+      - src/preprocess_data.py
+      - ${data_preproc.in}
+    outs:
+      - ${data_preproc.out_X_train}
+      - ${data_preproc.out_X_test}
+      - ${data_preproc.out_y_train}
+      - ${data_preproc.out_y_test}
+  
+  train_lr:
+    cmd: python src/train_lr.py --config=params.yaml
+    params:
+    - train_lr
+    deps:
+      - src/train_lr.py
+      - ${train_lr.in_X_train}
+      - ${train_lr.in_y_train}
+    outs:
+      - ${train_lr.model_LR.out}
+
+  evaluate_model:
+    cmd: python src/evaluate_model.py --config=params.yaml
+    # params:
+    # - evaluate_model
+    deps:
+      - src/evaluate_model.py
+      - ${evaluate_model.model}
+      - ${evaluate_model.in_X_train}
+      - ${evaluate_model.in_y_train}
+      - ${evaluate_model.in_X_test}
+      - ${evaluate_model.in_y_test}
+    # outs:
+    #   - data/processed/proccessed_forest_fires.csv 
 # stages:
 
 #   data_cleanup:

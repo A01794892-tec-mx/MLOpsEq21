@@ -8,11 +8,11 @@ def load_data(config_path: Text) -> None:
     with open(config_path) as conf_file:
         config = yaml.safe_load(conf_file)
 
-    data = pd.read_csv(config['data']['raw'] ,sep=',', header='infer')
+    data = pd.read_csv(config['data_load']['in'] ,sep=',', header='infer')
 
     data.head()
 
-    data.to_csv(config['data']['interim'], index=False)
+    data.to_csv(config['data_load']['out'], index=False)
     
 
 if __name__ == '__main__':
