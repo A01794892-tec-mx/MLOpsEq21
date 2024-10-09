@@ -5,3 +5,8 @@ base:
 data_cleanup:
   dataset_algerian_forest_fires: 'data/interim/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv'
   dataset_algerian_forest_fires_clean: 'data/processed/Algerian_forest_fires_dataset_clean.csv'
+
+data:
+raw: 'data/raw/Algerian_forest_fires_dataset_UPDATE.csv'
+interdim: 'data/interim/forest_fires_UPDATE_RegionAdd.csv'
+processed: 'data/processed/proccessed_forest_fires.csv'

@@ -1,10 +1,18 @@
 stages:
-
-  data_cleanup:
-    cmd: python src/stages/data_cleanup.py --config=params.yaml
+  load_data:
+    cmd: python src/load_data.py --config=params.yml
     deps:
-    - data/interim/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
-    params:
-    - base
+      - load_data.py
+      - data/interdim/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
     outs:
-    - data/processed/Algerian_forest_fires_dataset_clean.csv
+      - data/processed/proccessed_forest_fires.csv
+# stages:
+
+#   data_cleanup:
+#     cmd: python src/stages/data_cleanup.py --config=params.yaml
+#     deps:
+#     - data/interim/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
+#     params:
+#     - base
+#     outs:
+#     - data/processed/Algerian_forest_fires_dataset_clean.csv
