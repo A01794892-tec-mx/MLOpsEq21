@@ -1,8 +1,10 @@
 stages:
   load_data:
     cmd: python src/load_data.py --config=params.yml
+    params:
+    - data
     deps:
-      - load_data.py
+      - src/load_data.py
       - data/interdim/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
     outs:
       - data/processed/proccessed_forest_fires.csv
