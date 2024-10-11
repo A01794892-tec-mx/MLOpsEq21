@@ -22,8 +22,8 @@ stages:
     deps:
     - path: data/raw/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
       hash: md5
-      md5: dc4733640124d3065da11677953a0703
-      size: 17311
+      md5: 848fd16e9a21dfff1e36f20925ada219
+      size: 20977
     - path: src/load_data.py
       hash: md5
       md5: bc1d739be5de74a9a32e1cf55b2af4db
@@ -36,15 +36,15 @@ stages:
     outs:
     - path: data/interim/input_forest_fires.csv
       hash: md5
-      md5: ab355c9c12442003c38d3964553a6010
-      size: 17488
+      md5: 97aaa67d46399fff9e72b85576fe46db
+      size: 21152
   preprocess_data:
     cmd: python src/preprocess_data.py --config=params.yaml
     deps:
     - path: data/interim/input_forest_fires.csv
       hash: md5
-      md5: ab355c9c12442003c38d3964553a6010
-      size: 17488
+      md5: 97aaa67d46399fff9e72b85576fe46db
+      size: 21152
     - path: src/preprocess_data.py
       hash: md5
       md5: c9077b1f895bd8af0a646a0a37057748
