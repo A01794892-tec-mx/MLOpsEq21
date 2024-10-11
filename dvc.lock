@@ -18,13 +18,13 @@ stages:
       md5: 6445fabc896e1f8247225eebf4c0c10c
       size: 18271
   load_data:
-    cmd: python src/load_data.py --config=params.yaml
+    cmd: python src/stages/load_data.py --config=params.yaml
     deps:
     - path: data/raw/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
       hash: md5
       md5: 848fd16e9a21dfff1e36f20925ada219
       size: 20977
-    - path: src/load_data.py
+    - path: src/stages/load_data.py
       hash: md5
       md5: bc1d739be5de74a9a32e1cf55b2af4db
       size: 605
@@ -39,13 +39,13 @@ stages:
       md5: 97aaa67d46399fff9e72b85576fe46db
       size: 21152
   preprocess_data:
-    cmd: python src/preprocess_data.py --config=params.yaml
+    cmd: python src/stages/preprocess_data.py --config=params.yaml
     deps:
     - path: data/interim/input_forest_fires.csv
       hash: md5
       md5: 97aaa67d46399fff9e72b85576fe46db
       size: 21152
-    - path: src/preprocess_data.py
+    - path: src/stages/preprocess_data.py
       hash: md5
       md5: c9077b1f895bd8af0a646a0a37057748
       size: 3383
@@ -75,7 +75,7 @@ stages:
       md5: ccb752c1afdf4ecf9f6a103724baa717
       size: 1509
   train_lr:
-    cmd: python src/train_lr.py --config=params.yaml
+    cmd: python src/stages/train_lr.py --config=params.yaml
     deps:
     - path: data/processed/X_train.csv
       hash: md5
@@ -85,7 +85,7 @@ stages:
       hash: md5
       md5: ccb752c1afdf4ecf9f6a103724baa717
       size: 1509
-    - path: src/train_lr.py
+    - path: src/stages/train_lr.py
       hash: md5
       md5: 5fcdfc44d28c6359361b3ed10b6e1008
       size: 1216
@@ -107,7 +107,7 @@ stages:
       md5: 33cb09b8bdbe8795eadd7d3fc19c3fa5
       size: 859
   evaluate_model:
-    cmd: python src/evaluate_model.py --config=params.yaml
+    cmd: python src/stages/evaluate_model.py --config=params.yaml
     deps:
     - path: data/processed/X_test.csv
       hash: md5
@@ -129,7 +129,7 @@ stages:
       hash: md5
       md5: 33cb09b8bdbe8795eadd7d3fc19c3fa5
       size: 859
-    - path: src/evaluate_model.py
+    - path: src/stages/evaluate_model.py
       hash: md5
       md5: 6907de1475b42ed095165914a30cb6fb
       size: 1564
