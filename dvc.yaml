@@ -1,20 +1,20 @@
 stages:
   load_data:
-    cmd: python src/load_data.py --config=params.yaml
+    cmd: python src/stages/load_data.py --config=params.yaml
     params:
     - data_load
     deps:
-      - src/load_data.py
+      - src/stages/load_data.py
       - ${data_load.in}
     outs:
       - ${data_load.out}
 
   preprocess_data:
-    cmd: python src/preprocess_data.py --config=params.yaml
+    cmd: python src/stages/preprocess_data.py --config=params.yaml
     params:
     - data_preproc
     deps:
-      - src/preprocess_data.py
+      - src/stages/preprocess_data.py
       - ${data_preproc.in}
     outs:
       - ${data_preproc.out_X_train}
@@ -23,22 +23,22 @@ stages:
       - ${data_preproc.out_y_test}
   
   train_lr:
-    cmd: python src/train_lr.py --config=params.yaml
+    cmd: python src/stages/train_lr.py --config=params.yaml
     params:
     - train_lr
     deps:
-      - src/train_lr.py
+      - src/stages/train_lr.py
       - ${train_lr.in_X_train}
       - ${train_lr.in_y_train}
     outs:
       - ${train_lr.model_LR.out}
 
   evaluate_model:
-    cmd: python src/evaluate_model.py --config=params.yaml
+    cmd: python src/stages/evaluate_model.py --config=params.yaml
     # params:
     # - evaluate_model
     deps:
-      - src/evaluate_model.py
+      - src/stages/evaluate_model.py
       - ${evaluate_model.model}
       - ${evaluate_model.in_X_train}
       - ${evaluate_model.in_y_train}
