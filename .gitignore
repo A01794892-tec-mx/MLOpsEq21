@@ -3,3 +3,4 @@ MLOpsEq21_venv/
 mlops/minio_data/
 mlruns/.*
 /models
+/reports
