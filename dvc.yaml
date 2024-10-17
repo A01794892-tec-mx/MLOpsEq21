@@ -3,8 +3,6 @@ stages:
     cmd: python src/stages/load_data.py --config=params.yaml
     params:
       - data_load
-      - repo
-      - dvc_version
     deps:
       - src/stages/load_data.py
       - ${data_load.in}
@@ -39,7 +37,6 @@ stages:
     cmd: python src/stages/evaluate_model.py --config=params.yaml
     deps:
       - src/stages/evaluate_model.py
-      - ${evaluate_model.model}
       - ${evaluate_model.in_X_train}
       - ${evaluate_model.in_y_train}
       - ${evaluate_model.in_X_test}

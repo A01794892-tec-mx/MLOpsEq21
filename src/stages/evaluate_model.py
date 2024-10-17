@@ -13,7 +13,7 @@ def evaluate_model(config_path: Text) -> None:
     with open(config_path) as conf_file:
         config = yaml.safe_load(conf_file)
     # Cargar el modelo desde el archivo .pkl
-    with open(config['evaluate_model']['model'], 'rb') as f:
+    with open(f"{config['train_lr']['model_LR']['out']}\\{config['train_lr']['model_LR']['modelName']}_{config['data_load']['dvc_version']}.pkl", 'rb') as f:
         modelLR = pickle.load(f)
 
     X_train =   pd.read_csv(config['evaluate_model']['in_X_train'])

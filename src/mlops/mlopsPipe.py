@@ -13,46 +13,63 @@ def load_params(config_file):
     with open(config_file, "r") as file:
         return yaml.safe_load(file)
 
-# Define pipeline stages
-def run_pipeline_stage(stage_name, script, params):
+
+# def run_pipeline_stage(stage_name, script, params, config_path):
+#     with mlflow.start_run(run_name=stage_name):
+#         mlflow.log_params(params)
+#         subprocess.run(["python", script, "--config", config_path], check=True)
+
+def run_pipeline_stage(stage_name, script, params, config_path):
     with mlflow.start_run(run_name=stage_name):
         mlflow.log_params(params)
-        subprocess.run(["python", script, "--config", "params.yaml"], check=True)
+        try:
+            # Use absolute path for the script
+            script_path = os.path.abspath(script)  # Convert to absolute path
+
+            # Specify the Python executable from your virtual environment
+            python_executable = os.path.join("MLOpsEq21_venv", "Scripts", "python.exe")
+
+            result = subprocess.run(
+                [python_executable, script_path, "--config", config_path],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+
+            if stage_name == "train_lr":
+                run_id = mlflow.active_run().info.run_id  # Get the current run ID
+                mlflow.register_model(f"runs:/{run_id}/model", "")  # Register the model
+            print(result.stdout)  # Print standard output
+        except subprocess.CalledProcessError as e:
+            print(f"Error in stage '{stage_name}': {e}")
+            print(f"Command output: {e.output}")  # This will give you more insight
+            print(f"Error output: {e.stderr}")  # Print error output for more details
+            raise  # Optionally re-raise the error to stop the pipeline
+
 
 # Main script to run the pipeline
-def main(tag):
+def main(config_path):
+    with open(config_path) as conf_file:
+        config = yaml.safe_load(conf_file)
     # Set up MLFlow tracking
-    mlflow.set_tracking_uri("http://localhost:5000")  # Modify with your tracking server URI
-    mlflow.set_experiment(f"/forestFires/{tag}/")  # Modify with your experiment path/name
+    mlflow.set_tracking_uri(config['mlflow']['host'])  # Modify with your tracking server URI
+    mlflow.set_experiment(f"/{config['mlflow']['experiment_name']}/{config['data_load']['dvc_version']}/")  # Modify with your experiment path/name
 
-    # # Save the original branch name
-    # original_branch = subprocess.check_output(["git", "branch", "--show-current"]).strip().decode()
 
-    # # Create a temporary branch from the original branch
-    # temp_branch = create_temp_branch(original_branch)
 
-    # try:
-    params = load_params("params.yaml")
-    # Get DVC data paths using dvc.api.get_url based on the provided tag
-    repo_url = "https://github.com/A01794892-tec-mx/MLOpsEq21.git"  # Modify with your repo URL
-    # Example of how to get paths from DVC
-    X_train_path = get_dvc_data_path(params['data_load']['out'], repo_url, tag)
-    y_train_path = get_dvc_data_path(params['data_preproc']['out_y_train'], repo_url, tag)
-    print(f"Fetched data: X_train from {X_train_path}, y_train from {y_train_path}")
-    # Run the pipeline stages with MLFlow tracking
-    run_pipeline_stage("load_data", "src/stages/load_data.py", params['data_load'])
-    run_pipeline_stage("preprocess_data", "src/stages/preprocess_data.py", params['data_preproc'])
-    run_pipeline_stage("train_lr", "src/stages/train_lr.py", params['train_lr'])
-    run_pipeline_stage("evaluate_model", "src/stages/evaluate_model.py", params['evaluate_model'])
+    run_pipeline_stage("load_data", "src/stages/load_data.py", config['data_load'], config_path)
+    run_pipeline_stage("preprocess_data", "src/stages/preprocess_data.py", config['data_preproc'], config_path)
+    run_pipeline_stage("train_lr", "src/stages/train_lr.py", config['train_lr'], config_path)
+    run_pipeline_stage("evaluate_model", "src/stages/evaluate_model.py", config['evaluate_model'], config_path)
 
-    # finally:
-    #     # Switch back to the original branch and clean up the temporary branch
-    #     cleanup_branch(original_branch, temp_branch)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--tag", required=True, help="Git tag to pull DVC data from")
+    parser.add_argument('--config', required=True)
+    # parser.add_argument('--repo', required=False, help="Git repo")
+    # parser.add_argument('--dvc_version', required=False, help="DVC version or Git tag to pull data from")
     args = parser.parse_args()
 
     # Run the pipeline with the provided tag
-    main(args.tag)
+    main(config_path=args.config)

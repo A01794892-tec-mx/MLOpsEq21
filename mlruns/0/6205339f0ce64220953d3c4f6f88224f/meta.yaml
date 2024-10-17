@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/MNA/MLOpsEq21/mlruns/0/6205339f0ce64220953d3c4f6f88224f/artifacts
+end_time: 1729191608140
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 6205339f0ce64220953d3c4f6f88224f
+run_name: funny-bee-190
+run_uuid: 6205339f0ce64220953d3c4f6f88224f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729191608105
+status: 4
+tags: []
+user_id: AMD RYZEN 7

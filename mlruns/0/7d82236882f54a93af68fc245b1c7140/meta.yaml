@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/MNA/MLOpsEq21/mlruns/0/7d82236882f54a93af68fc245b1c7140/artifacts
+end_time: 1729192033022
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 7d82236882f54a93af68fc245b1c7140
+run_name: fearless-croc-770
+run_uuid: 7d82236882f54a93af68fc245b1c7140
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729192027630
+status: 3
+tags: []
+user_id: AMD RYZEN 7

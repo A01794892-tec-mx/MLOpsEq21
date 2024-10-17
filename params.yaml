@@ -1,24 +1,14 @@
-repo: "https://github.com/A01794892-tec-mx/MLOpsEq21.git"
-
-dvc_version: "v1.0.0"
-
 base:
   random_state: 42
   log_level: INFO
 
-# data_cleanup:
-#   dataset_algerian_forest_fires: 'data/interim/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv'
-#   dataset_algerian_forest_fires_clean: 'data/processed/Algerian_forest_fires_dataset_clean.csv'
-
-# data:
-#   raw: 'data/raw/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv'
-#   interim: 'data/interim/input_forest_fires.csv'
-#   processed: 'data/processed/proccessed_forest_fires.csv'
 
 data_load:
+  dvc_version: "v1.0.0"
   in: 'data/raw/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv'
   out: 'data/interim/input_forest_fires.csv'
-
+  repo: "https://github.com/A01794892-tec-mx/MLOpsEq21.git"
+  
 data_preproc:
   in: 'data/interim/input_forest_fires.csv'
   out_X_train: 'data/processed/X_train.csv'
@@ -31,16 +21,20 @@ train_lr:
   in_y_train: 'data/processed/y_train.csv'
 
   model_LR:
+    modelName: 'modelLR'
     penalty: 'l2'
     C: 100
     solver: 'liblinear'
     max_iter: 1000
     random_state: 55
-    out: 'models/modelLR.pkl'
+    out: 'models'
 
 evaluate_model:
-  model: 'models/modelLR.pkl'
   in_X_train: 'data/processed/X_train.csv'
   in_X_test: 'data/processed/X_test.csv'
   in_y_train: 'data/processed/y_train.csv'
   in_y_test: 'data/processed/y_test.csv'
+
+mlflow:
+  host: "http://localhost:5000"
+  experiment_name: "Algerian_Forest_Fires"

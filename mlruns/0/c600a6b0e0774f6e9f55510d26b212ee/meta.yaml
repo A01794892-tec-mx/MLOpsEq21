@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/MNA/MLOpsEq21/mlruns/0/c600a6b0e0774f6e9f55510d26b212ee/artifacts
+end_time: 1729191957700
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: c600a6b0e0774f6e9f55510d26b212ee
+run_name: hilarious-ray-578
+run_uuid: c600a6b0e0774f6e9f55510d26b212ee
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729191952079
+status: 3
+tags: []
+user_id: AMD RYZEN 7
