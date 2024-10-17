@@ -111,6 +111,11 @@ stages:
       hash: md5
       md5: ccb752c1afdf4ecf9f6a103724baa717
       size: 1509
+    - path: models
+      hash: md5
+      md5: 13442ba635f1f024d7ff6ea5eeb576fc.dir
+      size: 859
+      nfiles: 2
     - path: src/stages/evaluate_model.py
       hash: md5
       md5: d90ae30b4872d5b824180fad871a2522
