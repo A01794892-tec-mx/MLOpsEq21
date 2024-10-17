@@ -1,3 +1,7 @@
+repo: "https://github.com/A01794892-tec-mx/MLOpsEq21.git"
+
+dvc_version: "v1.0.0"
+
 base:
   random_state: 42
   log_level: INFO
