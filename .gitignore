@@ -1,6 +1,3 @@
 MLOpsEq21_venv/
 .vscode
 mlops/minio_data/
-/01_raw_data
-/02_interim_data
-/03_processed_data
