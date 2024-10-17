@@ -12,7 +12,7 @@ def load_data(config_path):
     data_url = dvc.api.get_url(
         path=config['data_load']['in'],
         repo=config['data_load']['repo'],
-        rev=config['data_load']['dvc_version']
+        rev=config['dvc_version']
     )
 
     # Load the data and save to the output path

@@ -2,9 +2,11 @@ base:
   random_state: 42
   log_level: INFO
 
+dvc_version: "v1.0.0"
+
+config_path: "params.yaml"
 
 data_load:
-  dvc_version: "v1.0.0"
   in: 'data/raw/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv'
   out: 'data/interim/input_forest_fires.csv'
   repo: "https://github.com/A01794892-tec-mx/MLOpsEq21.git"

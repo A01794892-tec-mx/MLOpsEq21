@@ -28,7 +28,7 @@ def train_lr(config_path):
         model.fit(X_train, np.ravel(y_train))
 
         # Save the model locally
-        model_path = f"{config['train_lr']['model_LR']['out']}/{config['train_lr']['model_LR']['modelName']}_{config['data_load']['dvc_version']}.pkl"
+        model_path = f"{config['train_lr']['model_LR']['out']}/{config['train_lr']['model_LR']['modelName']}_{config['dvc_version']}.pkl"
         with open(model_path, 'wb') as f:
             pickle.dump(model, f)
         

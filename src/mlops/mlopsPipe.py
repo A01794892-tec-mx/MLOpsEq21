@@ -19,9 +19,9 @@ def load_params(config_file):
 #         mlflow.log_params(params)
 #         subprocess.run(["python", script, "--config", config_path], check=True)
 
-def run_pipeline_stage(stage_name, script, params, config_path):
+def run_pipeline_stage(stage_name, script, config):
     with mlflow.start_run(run_name=stage_name):
-        mlflow.log_params(params)
+        mlflow.log_params(config[stage_name])
         try:
             # Use absolute path for the script
             script_path = os.path.abspath(script)  # Convert to absolute path
@@ -30,7 +30,7 @@ def run_pipeline_stage(stage_name, script, params, config_path):
             python_executable = os.path.join("MLOpsEq21_venv", "Scripts", "python.exe")
 
             result = subprocess.run(
-                [python_executable, script_path, "--config", config_path],
+                [python_executable, script_path, "--config", config['config_path']],
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -39,7 +39,7 @@ def run_pipeline_stage(stage_name, script, params, config_path):
 
             if stage_name == "train_lr":
                 run_id = mlflow.active_run().info.run_id  # Get the current run ID
-                mlflow.register_model(f"runs:/{run_id}/model", "")  # Register the model
+                mlflow.register_model(f"runs:/{run_id}/model", f"{config['train_lr']['model_LR']['modelName']}_{config['dvc_version']}")  # Register the model
             print(result.stdout)  # Print standard output
         except subprocess.CalledProcessError as e:
             print(f"Error in stage '{stage_name}': {e}")
@@ -52,16 +52,17 @@ def run_pipeline_stage(stage_name, script, params, config_path):
 def main(config_path):
     with open(config_path) as conf_file:
         config = yaml.safe_load(conf_file)
+
     # Set up MLFlow tracking
     mlflow.set_tracking_uri(config['mlflow']['host'])  # Modify with your tracking server URI
-    mlflow.set_experiment(f"/{config['mlflow']['experiment_name']}/{config['data_load']['dvc_version']}/")  # Modify with your experiment path/name
+    mlflow.set_experiment(f"/{config['mlflow']['experiment_name']}_{config['dvc_version']}/")  # Modify with your experiment path/name
 
 
 
-    run_pipeline_stage("load_data", "src/stages/load_data.py", config['data_load'], config_path)
-    run_pipeline_stage("preprocess_data", "src/stages/preprocess_data.py", config['data_preproc'], config_path)
-    run_pipeline_stage("train_lr", "src/stages/train_lr.py", config['train_lr'], config_path)
-    run_pipeline_stage("evaluate_model", "src/stages/evaluate_model.py", config['evaluate_model'], config_path)
+    run_pipeline_stage("data_load", "src/stages/load_data.py", config)
+    run_pipeline_stage("data_preproc", "src/stages/preprocess_data.py", config)
+    run_pipeline_stage("train_lr", "src/stages/train_lr.py", config)
+    run_pipeline_stage("evaluate_model", "src/stages/evaluate_model.py", config)
 
 
 if __name__ == "__main__":
