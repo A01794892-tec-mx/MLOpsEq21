@@ -36,6 +36,7 @@ stages:
   evaluate_model:
     cmd: python src/stages/evaluate_model.py --config=params.yaml
     deps:
+      - ${train_lr.model_LR.out}
       - src/stages/evaluate_model.py
       - ${evaluate_model.in_X_train}
       - ${evaluate_model.in_y_train}

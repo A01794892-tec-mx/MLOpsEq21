@@ -32,6 +32,7 @@ train_lr:
     out: 'models'
 
 evaluate_model:
+  in: 'models'
   in_X_train: 'data/processed/X_train.csv'
   in_X_test: 'data/processed/X_test.csv'
   in_y_train: 'data/processed/y_train.csv'
