@@ -1,0 +1,1 @@
+{'penalty': 'l2', 'C': 100, 'solver': 'liblinear', 'max_iter': 1000, 'random_state': 55, 'out': 'models/modelLR.pkl'}

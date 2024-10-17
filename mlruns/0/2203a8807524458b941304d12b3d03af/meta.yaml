@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/MNA/MLOpsEq21/mlruns/0/2203a8807524458b941304d12b3d03af/artifacts
+end_time: 1729132974098
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 2203a8807524458b941304d12b3d03af
+run_name: load_data
+run_uuid: 2203a8807524458b941304d12b3d03af
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729132971352
+status: 3
+tags: []
+user_id: AMD RYZEN 7
