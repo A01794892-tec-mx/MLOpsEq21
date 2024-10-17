@@ -36,7 +36,7 @@ def run_pipeline_stage(stage_name, script, params):
 def main(tag):
     # Set up MLFlow tracking
     mlflow.set_tracking_uri("http://localhost:5000")  # Modify with your tracking server URI
-    mlflow.set_experiment(f"/pipe/test/")  # Modify with your experiment path/name
+    mlflow.set_experiment(f"/forestFires/{tag}/")  # Modify with your experiment path/name
 
     # Save the original branch name
     original_branch = subprocess.check_output(["git", "branch", "--show-current"]).strip().decode()
