@@ -3,4 +3,4 @@ outs:
   size: 32859
   nfiles: 4
   hash: md5
-  path: processed
+  path: 03_processed_data

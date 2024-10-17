@@ -3,4 +3,4 @@ outs:
   size: 21152
   nfiles: 1
   hash: md5
-  path: interim
+  path: 02_interim_data
