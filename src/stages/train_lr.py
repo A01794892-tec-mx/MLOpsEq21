@@ -6,6 +6,7 @@ import pickle
 import numpy as np
 import mlflow
 import mlflow.sklearn  # For registering sklearn models
+import os
 
 def train_lr(config_path):
     with open(config_path) as conf_file:
@@ -27,8 +28,12 @@ def train_lr(config_path):
         )
         model.fit(X_train, np.ravel(y_train))
 
+        model_dir = config['train_lr']['out']
+        if not os.path.exists(model_dir):
+            os.makedirs(model_dir)
+
         # Save the model locally
-        model_path = f"{config['train_lr']['model_LR']['out']}/{config['train_lr']['model_LR']['modelName']}_{config['dvc_version']}.pkl"
+        model_path = f"{model_dir}/{config['train_lr']['model_LR']['modelName']}_{config['dvc_version']}.pkl"
         with open(model_path, 'wb') as f:
             pickle.dump(model, f)
         

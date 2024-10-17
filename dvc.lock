@@ -71,8 +71,8 @@ stages:
       size: 1509
     - path: src/stages/train_lr.py
       hash: md5
-      md5: 92a672b7431609dfb6a2df9a089107bc
-      size: 1856
+      md5: b63a740326eda31104b4ef85e3b19ae9
+      size: 1967
     params:
       params.yaml:
         train_lr:
@@ -85,13 +85,13 @@ stages:
             solver: liblinear
             max_iter: 1000
             random_state: 55
-            out: models
+          out: models
     outs:
     - path: models
       hash: md5
-      md5: 13442ba635f1f024d7ff6ea5eeb576fc.dir
+      md5: 9b7c7a15a3c1c42bba06e08b8c756984.dir
       size: 859
-      nfiles: 2
+      nfiles: 1
   evaluate_model:
     cmd: python src/stages/evaluate_model.py --config=params.yaml
     deps:
@@ -113,10 +113,10 @@ stages:
       size: 1509
     - path: models
       hash: md5
-      md5: 13442ba635f1f024d7ff6ea5eeb576fc.dir
+      md5: 9b7c7a15a3c1c42bba06e08b8c756984.dir
       size: 859
-      nfiles: 2
+      nfiles: 1
     - path: src/stages/evaluate_model.py
       hash: md5
-      md5: d90ae30b4872d5b824180fad871a2522
-      size: 1647
+      md5: 3a485c7091402675bef9202adc4b8815
+      size: 1635
