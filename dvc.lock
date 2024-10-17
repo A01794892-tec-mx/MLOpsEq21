@@ -9,12 +9,11 @@ stages:
       size: 20977
     - path: src/stages/load_data.py
       hash: md5
-      md5: 3ef2139ee9a4d5ba6bfd2e32d0d05553
-      size: 969
+      md5: cfd114b0675fe2481d03e2c5c4290cad
+      size: 956
     params:
       params.yaml:
         data_load:
-          dvc_version: v1.0.0
           in: data/raw/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
           out: data/interim/input_forest_fires.csv
           repo: https://github.com/A01794892-tec-mx/MLOpsEq21.git
@@ -72,8 +71,8 @@ stages:
       size: 1509
     - path: src/stages/train_lr.py
       hash: md5
-      md5: 158d6c7cad0d1d6e6c684c432b533b93
-      size: 1869
+      md5: 92a672b7431609dfb6a2df9a089107bc
+      size: 1856
     params:
       params.yaml:
         train_lr:
@@ -90,9 +89,9 @@ stages:
     outs:
     - path: models
       hash: md5
-      md5: cb748872959aab15d696f9ae2fa14656.dir
-      size: 0
-      nfiles: 1
+      md5: 13442ba635f1f024d7ff6ea5eeb576fc.dir
+      size: 859
+      nfiles: 2
   evaluate_model:
     cmd: python src/stages/evaluate_model.py --config=params.yaml
     deps:
@@ -114,5 +113,5 @@ stages:
       size: 1509
     - path: src/stages/evaluate_model.py
       hash: md5
-      md5: 386b205ecbeddb90d0490e24e34e0038
-      size: 1661
+      md5: d90ae30b4872d5b824180fad871a2522
+      size: 1647
