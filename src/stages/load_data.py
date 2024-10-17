@@ -22,7 +22,8 @@ def load_data(config_path, repo, dvc_version):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', required=True)
-    parser.add_argument('--dvc-version', required=False, help="DVC version or Git tag to pull data from")
+    parser.add_argument('--repo', required=False, help="Git repo")
+    parser.add_argument('--dvc_version', required=False, help="DVC version or Git tag to pull data from")
     args = parser.parse_args()
 
-    load_data(config_path=args.config, dvc_version=args.dvc_version)
+    load_data(config_path=args.config, repo=args.repo, dvc_version=args.dvc_version)
