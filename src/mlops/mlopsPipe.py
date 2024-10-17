@@ -24,12 +24,15 @@ def run_pipeline_stage(stage_name, script, params):
 
 # Main script to run the pipeline
 def main(tag):
+
+    # Pull DVC data associated with the tag
+    pull_dvc_data(tag)
+    
     # Set up MLFlow tracking
     mlflow.set_tracking_uri("http://localhost:5000")  # Modify with your tracking server URI
     mlflow.set_experiment(f"/pipe/test/")  # Modify with your experiment path/name
 
-    # Pull DVC data associated with the tag
-    pull_dvc_data(tag)
+
     
     # Load parameters from the YAML config
     params = load_params("params.yaml")
