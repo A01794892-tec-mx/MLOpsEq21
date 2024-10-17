@@ -19,7 +19,7 @@ def cleanup_branch(original_branch, temp_branch):
 # Function to pull DVC data using a Git tag
 def pull_dvc_data(tag):
     subprocess.run(["git", "checkout", tag], check=True)  # Checkout to the given tag
-    subprocess.run(["dvc", "pull"], check=True)  # Pull the corresponding DVC data
+    subprocess.run(["dvc", "pull", "-f"], check=True)  # Pull the corresponding DVC data
 
 # Load YAML config file
 def load_params(config_file):
