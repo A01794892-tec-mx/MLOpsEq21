@@ -24,11 +24,11 @@ train_lr:
 
   model_LR:
     modelName: 'modelLR'
-    penalty: 'l2'
+    penalty: 'l1'
     C: 10
-    solver: 'newton-cg'
+    solver: 'liblinear'
     max_iter: 1000
-    random_state: 20
+    random_state: 52
   
   out: 'models'
 
@@ -42,4 +42,4 @@ evaluate_model:
 
 mlflow:
   host: "http://localhost:5000"
-  experiment_name: "Algerian_Forest_Fires"
+  experiment_name: "Algerian_Forest_Fires_Experiment"

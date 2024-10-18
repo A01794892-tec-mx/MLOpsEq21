@@ -5,8 +5,8 @@ stages:
     deps:
     - path: data/raw/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
       hash: md5
-      md5: a91e3f59ae0c8ea3633e1263c1705d98
-      size: 18125
+      md5: 848fd16e9a21dfff1e36f20925ada219
+      size: 20977
     - path: src/stages/load_data.py
       hash: md5
       md5: cfd114b0675fe2481d03e2c5c4290cad
@@ -20,15 +20,15 @@ stages:
     outs:
     - path: data/interim/input_forest_fires.csv
       hash: md5
-      md5: b7566dc04423e026ceb1fde6cc0ba555
-      size: 18561
+      md5: 97aaa67d46399fff9e72b85576fe46db
+      size: 21152
   preprocess_data:
     cmd: python src/stages/preprocess_data.py --config=params.yaml
     deps:
     - path: data/interim/input_forest_fires.csv
       hash: md5
-      md5: b7566dc04423e026ceb1fde6cc0ba555
-      size: 18561
+      md5: 97aaa67d46399fff9e72b85576fe46db
+      size: 21152
     - path: src/stages/preprocess_data.py
       hash: md5
       md5: c9077b1f895bd8af0a646a0a37057748
@@ -44,31 +44,31 @@ stages:
     outs:
     - path: data/processed/X_test.csv
       hash: md5
-      md5: d312deaccef6760ed623a7463ab438df
-      size: 5474
+      md5: 44c12e80d0d256b19e2960ad5220fcaa
+      size: 6267
     - path: data/processed/X_train.csv
       hash: md5
-      md5: e878764584a887741d4af190cd2046c0
-      size: 21670
+      md5: 8a1e51ac6fe025f832a46efed7f520da
+      size: 24692
     - path: data/processed/y_test.csv
       hash: md5
-      md5: 3fc1a9e381714ea591dbb3d0cb331087
-      size: 339
+      md5: 8fb2b7f01a6efffb34dc0004431fd979
+      size: 391
     - path: data/processed/y_train.csv
       hash: md5
-      md5: 714ff6ce199ec2e0de7cc51aec5d0982
-      size: 1305
+      md5: ccb752c1afdf4ecf9f6a103724baa717
+      size: 1509
   train_lr:
     cmd: python src/stages/train_lr.py --config=params.yaml
     deps:
     - path: data/processed/X_train.csv
       hash: md5
-      md5: e878764584a887741d4af190cd2046c0
-      size: 21670
+      md5: 8a1e51ac6fe025f832a46efed7f520da
+      size: 24692
     - path: data/processed/y_train.csv
       hash: md5
-      md5: 714ff6ce199ec2e0de7cc51aec5d0982
-      size: 1305
+      md5: ccb752c1afdf4ecf9f6a103724baa717
+      size: 1509
     - path: src/stages/train_lr.py
       hash: md5
       md5: b63a740326eda31104b4ef85e3b19ae9
@@ -89,7 +89,7 @@ stages:
     outs:
     - path: models
       hash: md5
-      md5: 14b107539c3e78aeb9fd6db2a780a8ad.dir
+      md5: 7799961193f65f1837c8eba40afe3938.dir
       size: 859
       nfiles: 1
   evaluate_model:
@@ -97,23 +97,23 @@ stages:
     deps:
     - path: data/processed/X_test.csv
       hash: md5
-      md5: d312deaccef6760ed623a7463ab438df
-      size: 5474
+      md5: 44c12e80d0d256b19e2960ad5220fcaa
+      size: 6267
     - path: data/processed/X_train.csv
       hash: md5
-      md5: e878764584a887741d4af190cd2046c0
-      size: 21670
+      md5: 8a1e51ac6fe025f832a46efed7f520da
+      size: 24692
     - path: data/processed/y_test.csv
       hash: md5
-      md5: 3fc1a9e381714ea591dbb3d0cb331087
-      size: 339
+      md5: 8fb2b7f01a6efffb34dc0004431fd979
+      size: 391
     - path: data/processed/y_train.csv
       hash: md5
-      md5: 714ff6ce199ec2e0de7cc51aec5d0982
-      size: 1305
+      md5: ccb752c1afdf4ecf9f6a103724baa717
+      size: 1509
     - path: models
       hash: md5
-      md5: 14b107539c3e78aeb9fd6db2a780a8ad.dir
+      md5: 7799961193f65f1837c8eba40afe3938.dir
       size: 859
       nfiles: 1
     - path: src/stages/evaluate_model.py
@@ -123,6 +123,6 @@ stages:
     outs:
     - path: reports
       hash: md5
-      md5: f89f41ba3b4a00e216d1cd18cf53b95b.dir
-      size: 1044
+      md5: a7219ad725be2c4967e767292a94331b.dir
+      size: 1104
       nfiles: 1
