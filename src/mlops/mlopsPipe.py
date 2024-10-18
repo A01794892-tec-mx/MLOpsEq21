@@ -3,7 +3,7 @@ import subprocess
 import yaml
 import mlflow
 import argparse
-import uuid
+import json
 import dvc.api  # Importing DVC API to fetch data
 
 def get_dvc_data_path(dvc_path, repo, rev):
@@ -21,7 +21,9 @@ def load_params(config_file):
 
 def run_pipeline_stage(stage_name, script, config):
     with mlflow.start_run(run_name=stage_name):
-        mlflow.log_params(config[stage_name])
+        #mlflow.log_params({'data_version': config['dvc_version']})
+        #mlflow.log_params(config[stage_name])
+        mlflow.set_tag("data_version", config['dvc_version'])
         try:
             # Use absolute path for the script
             script_path = os.path.abspath(script)  # Convert to absolute path
@@ -38,9 +40,25 @@ def run_pipeline_stage(stage_name, script, config):
             )
 
             if stage_name == "train_lr":
+                mlflow.log_params(config[stage_name])
                 run_id = mlflow.active_run().info.run_id  # Get the current run ID
-                mlflow.register_model(f"runs:/{run_id}/model", f"{config['train_lr']['model_LR']['modelName']}_{config['dvc_version']}")  # Register the model
+                mlflow.register_model(f"runs:/{run_id}/model", f"{config['train_lr']['model_LR']['modelName']}",tags={"data_version": config['dvc_version']})  # Register the model
+                            
+            if stage_name == "evaluate_model":
+                # Load evaluation metrics from the generated JSON file
+                metrics_path = f"{config['evaluate_model']['out']}/evaluation_metrics_{config['dvc_version']}.json"
+                with open(metrics_path) as metrics_file:
+                    evaluation_metrics = json.load(metrics_file)
+                    # Log metrics to MLflow
+                    mlflow.log_metric("accuracy_train", evaluation_metrics["accuracy_train"])
+                    mlflow.log_metric("accuracy_test", evaluation_metrics["accuracy_test"])
+
+                    # Log confusion matrix and classification report
+                    #mlflow.log_dict(evaluation_metrics["classification_report"], "classification_report.json")
+                    #mlflow.log_dict({"confusion_matrix": evaluation_metrics["confusion_matrix"]}, "confusion_matrix.json")
+            
             print(result.stdout)  # Print standard output
+        
         except subprocess.CalledProcessError as e:
             print(f"Error in stage '{stage_name}': {e}")
             print(f"Command output: {e.output}")  # This will give you more insight
@@ -55,7 +73,7 @@ def main(config_path):
 
     # Set up MLFlow tracking
     mlflow.set_tracking_uri(config['mlflow']['host'])  # Modify with your tracking server URI
-    mlflow.set_experiment(f"/{config['mlflow']['experiment_name']}_{config['dvc_version']}/")  # Modify with your experiment path/name
+    mlflow.set_experiment(f"/{config['mlflow']['experiment_name']}/")  # Modify with your experiment path/name
 
 
 

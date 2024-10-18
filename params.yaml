@@ -25,10 +25,10 @@ train_lr:
   model_LR:
     modelName: 'modelLR'
     penalty: 'l2'
-    C: 100
-    solver: 'liblinear'
+    C: 10
+    solver: 'newton-cg'
     max_iter: 1000
-    random_state: 55
+    random_state: 20
   
   out: 'models'
 
@@ -38,6 +38,7 @@ evaluate_model:
   in_X_test: 'data/processed/X_test.csv'
   in_y_train: 'data/processed/y_train.csv'
   in_y_test: 'data/processed/y_test.csv'
+  out: 'reports'
 
 mlflow:
   host: "http://localhost:5000"

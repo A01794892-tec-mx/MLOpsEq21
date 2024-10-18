@@ -42,3 +42,5 @@ stages:
       - ${evaluate_model.in_y_train}
       - ${evaluate_model.in_X_test}
       - ${evaluate_model.in_y_test}
+    outs:
+      - ${evaluate_model.out}
