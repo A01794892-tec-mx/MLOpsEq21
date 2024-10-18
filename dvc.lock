@@ -1,22 +1,5 @@
 schema: '2.0'
 stages:
-  data_cleanup:
-    cmd: python src/stages/data_cleanup.py --config=params.yaml
-    deps:
-    - path: data/interim/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
-      hash: md5
-      md5: dc4733640124d3065da11677953a0703
-      size: 17311
-    params:
-      params.yaml:
-        base:
-          random_state: 42
-          log_level: INFO
-    outs:
-    - path: data/processed/Algerian_forest_fires_dataset_clean.csv
-      hash: md5
-      md5: 6445fabc896e1f8247225eebf4c0c10c
-      size: 18271
   load_data:
     cmd: python src/stages/load_data.py --config=params.yaml
     deps:
@@ -26,13 +9,14 @@ stages:
       size: 20977
     - path: src/stages/load_data.py
       hash: md5
-      md5: bc1d739be5de74a9a32e1cf55b2af4db
-      size: 605
+      md5: cfd114b0675fe2481d03e2c5c4290cad
+      size: 956
     params:
       params.yaml:
         data_load:
           in: data/raw/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
           out: data/interim/input_forest_fires.csv
+          repo: https://github.com/A01794892-tec-mx/MLOpsEq21.git
     outs:
     - path: data/interim/input_forest_fires.csv
       hash: md5
@@ -87,25 +71,27 @@ stages:
       size: 1509
     - path: src/stages/train_lr.py
       hash: md5
-      md5: 5fcdfc44d28c6359361b3ed10b6e1008
-      size: 1216
+      md5: b63a740326eda31104b4ef85e3b19ae9
+      size: 1967
     params:
       params.yaml:
         train_lr:
           in_X_train: data/processed/X_train.csv
           in_y_train: data/processed/y_train.csv
           model_LR:
+            modelName: modelLR
             penalty: l2
-            C: 100
-            solver: liblinear
+            C: 10
+            solver: newton-cg
             max_iter: 1000
-            random_state: 55
-            out: models/modelLR.pkl
+            random_state: 20
+          out: models
     outs:
-    - path: models/modelLR.pkl
+    - path: models
       hash: md5
-      md5: 33cb09b8bdbe8795eadd7d3fc19c3fa5
+      md5: 7799961193f65f1837c8eba40afe3938.dir
       size: 859
+      nfiles: 1
   evaluate_model:
     cmd: python src/stages/evaluate_model.py --config=params.yaml
     deps:
@@ -125,11 +111,18 @@ stages:
       hash: md5
       md5: ccb752c1afdf4ecf9f6a103724baa717
       size: 1509
-    - path: models/modelLR.pkl
+    - path: models
       hash: md5
-      md5: 33cb09b8bdbe8795eadd7d3fc19c3fa5
+      md5: 7799961193f65f1837c8eba40afe3938.dir
       size: 859
+      nfiles: 1
     - path: src/stages/evaluate_model.py
       hash: md5
-      md5: 6907de1475b42ed095165914a30cb6fb
-      size: 1564
+      md5: 3c1f9c78b1cd49f8e830cc749d5c5a45
+      size: 2560
+    outs:
+    - path: reports
+      hash: md5
+      md5: a7219ad725be2c4967e767292a94331b.dir
+      size: 1104
+      nfiles: 1

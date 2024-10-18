@@ -1,2 +1,6 @@
-/interim
 /raw
+/interim
+/processed
+!/raw/*.dvc
+!/interim/*.dvc
+!/processed/*.dvc

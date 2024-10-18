@@ -2,7 +2,7 @@ stages:
   load_data:
     cmd: python src/stages/load_data.py --config=params.yaml
     params:
-    - data_load
+      - data_load
     deps:
       - src/stages/load_data.py
       - ${data_load.in}
@@ -21,7 +21,7 @@ stages:
       - ${data_preproc.out_X_test}
       - ${data_preproc.out_y_train}
       - ${data_preproc.out_y_test}
-  
+
   train_lr:
     cmd: python src/stages/train_lr.py --config=params.yaml
     params:
@@ -31,28 +31,16 @@ stages:
       - ${train_lr.in_X_train}
       - ${train_lr.in_y_train}
     outs:
-      - ${train_lr.model_LR.out}
+      - ${train_lr.out}
 
   evaluate_model:
     cmd: python src/stages/evaluate_model.py --config=params.yaml
-    # params:
-    # - evaluate_model
     deps:
+      - ${train_lr.out}
       - src/stages/evaluate_model.py
-      - ${evaluate_model.model}
       - ${evaluate_model.in_X_train}
       - ${evaluate_model.in_y_train}
       - ${evaluate_model.in_X_test}
       - ${evaluate_model.in_y_test}
-    # outs:
-    #   - data/processed/proccessed_forest_fires.csv 
-# stages:
-
-#   data_cleanup:
-#     cmd: python src/stages/data_cleanup.py --config=params.yaml
-#     deps:
-#     - data/interim/Algerian_forest_fires_dataset_UPDATE_RegionAdd.csv
-#     params:
-#     - base
-#     outs:
-#     - data/processed/Algerian_forest_fires_dataset_clean.csv
+    outs:
+      - ${evaluate_model.out}

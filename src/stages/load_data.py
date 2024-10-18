@@ -1,24 +1,29 @@
+import dvc.api
 import argparse
 import pandas as pd
-from typing import Text
 import yaml
 
-
-def load_data(config_path: Text) -> None:
+def load_data(config_path):
+    # Load configuration
     with open(config_path) as conf_file:
         config = yaml.safe_load(conf_file)
 
-    data = pd.read_csv(config['data_load']['in'] ,sep=',', header='infer')
+    # Use dvc.api.get_url to get the data for the specified version
+    data_url = dvc.api.get_url(
+        path=config['data_load']['in'],
+        repo=config['data_load']['repo'],
+        rev=config['dvc_version']
+    )
 
-    data.head()
-
+    # Load the data and save to the output path
+    data = pd.read_csv(data_url)
     data.to_csv(config['data_load']['out'], index=False)
-    
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', required=True)
+    # parser.add_argument('--repo', required=False, help="Git repo")
+    # parser.add_argument('--dvc_version', required=False, help="DVC version or Git tag to pull data from")
+    args = parser.parse_args()
 
-    args_parser = argparse.ArgumentParser()
-    args_parser.add_argument('--config', dest='config', required=True)
-    args = args_parser.parse_args()
-
-    data = load_data(config_path=args.config)
+    load_data(config_path=args.config)
