@@ -26,10 +26,6 @@ def train_lr(config_path):
             max_iter=config['train_lr']['model_LR']['max_iter'],
             random_state=config['train_lr']['model_LR']['random_state']
         )
-
-        
-
-
         model.fit(X_train, np.ravel(y_train))
 
         model_dir = config['train_lr']['out']
@@ -45,8 +41,13 @@ def train_lr(config_path):
         mlflow.sklearn.log_model(model, artifact_path="model", registered_model_name=config['train_lr']['model_LR']['modelName'])
 
         # Log model parameters (optional)
-        #mlflow.log_params(config['train_lr']['model_LR'])
-        #mlflow.log_param('C', config['train_lr']['model_LR']['C'])
+        mlflow.log_params(config['train_lr']['model_LR'])
+
+        mlflow.log_param('C', config['train_lr']['model_LR']['C'])
+        mlflow.log_param('penalty', config['train_lr']['model_LR']['penalty'])
+        mlflow.log_param('solver', config['train_lr']['model_LR']['solver'])
+        mlflow.log_param('max_iter', config['train_lr']['model_LR']['max_iter'])
+        mlflow.log_param('random_state', config['train_lr']['model_LR']['random_state'])
 
         # Optionally log the model path
         mlflow.log_artifact(model_path)
