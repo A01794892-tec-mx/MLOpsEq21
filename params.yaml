@@ -2,7 +2,7 @@ base:
   random_state: 42
   log_level: INFO
 
-dvc_version: "v1.0.4"
+dvc_version: "v1.0.5"
 
 config_path: "params.yaml"
 
