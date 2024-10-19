@@ -2,7 +2,7 @@ base:
   random_state: 42
   log_level: INFO
 
-dvc_version: "v1.0.0"
+dvc_version: "v1.0.1"
 
 config_path: "params.yaml"
 
@@ -27,7 +27,7 @@ train_lr:
     penalty: 'l1'
     C: 10
     solver: 'liblinear'
-    max_iter: 1000
+    max_iter: 500
     random_state: 52
   
   out: 'models'
