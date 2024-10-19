@@ -45,8 +45,8 @@ def train_lr(config_path):
         mlflow.sklearn.log_model(model, artifact_path="model", registered_model_name=config['train_lr']['model_LR']['modelName'])
 
         # Log model parameters (optional)
-        mlflow.log_params(config['train_lr']['model_LR'])
-        mlflow.log_param("C", config['train_lr']['model_LR']["C"])
+        #mlflow.log_params(config['train_lr']['model_LR'])
+        mlflow.log_param('C', config['train_lr']['model_LR']['C'])
 
         # Optionally log the model path
         mlflow.log_artifact(model_path)
