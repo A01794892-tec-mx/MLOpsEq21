@@ -80,16 +80,16 @@ stages:
           in_y_train: data/processed/y_train.csv
           model_LR:
             modelName: modelLR
-            penalty: l2
+            penalty: l1
             C: 10
-            solver: newton-cg
+            solver: liblinear
             max_iter: 1000
-            random_state: 20
+            random_state: 52
           out: models
     outs:
     - path: models
       hash: md5
-      md5: 7799961193f65f1837c8eba40afe3938.dir
+      md5: e472d92096b1ecce546b3303e6d92bf9.dir
       size: 859
       nfiles: 1
   evaluate_model:
@@ -113,7 +113,7 @@ stages:
       size: 1509
     - path: models
       hash: md5
-      md5: 7799961193f65f1837c8eba40afe3938.dir
+      md5: e472d92096b1ecce546b3303e6d92bf9.dir
       size: 859
       nfiles: 1
     - path: src/stages/evaluate_model.py
