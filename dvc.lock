@@ -63,16 +63,16 @@ stages:
     deps:
     - path: data/processed/X_train.csv
       hash: md5
-      md5: 8a1e51ac6fe025f832a46efed7f520da
-      size: 24692
+      md5: e878764584a887741d4af190cd2046c0
+      size: 21670
     - path: data/processed/y_train.csv
       hash: md5
-      md5: ccb752c1afdf4ecf9f6a103724baa717
-      size: 1509
+      md5: 714ff6ce199ec2e0de7cc51aec5d0982
+      size: 1305
     - path: src/stages/train_lr.py
       hash: md5
-      md5: b63a740326eda31104b4ef85e3b19ae9
-      size: 1967
+      md5: 7e55826ca9b18c71d6c425c4972e063d
+      size: 2682
     params:
       params.yaml:
         train_lr:
@@ -81,48 +81,48 @@ stages:
           model_LR:
             modelName: modelLR
             penalty: l2
-            C: 10
-            solver: newton-cg
+            C: 100
+            solver: liblinear
             max_iter: 1000
-            random_state: 20
+            random_state: 52
           out: models
     outs:
     - path: models
       hash: md5
-      md5: 7799961193f65f1837c8eba40afe3938.dir
-      size: 859
-      nfiles: 1
+      md5: e34516f066be60d525ac2e6c9aff9988.dir
+      size: 6013
+      nfiles: 7
   evaluate_model:
     cmd: python src/stages/evaluate_model.py --config=params.yaml
     deps:
     - path: data/processed/X_test.csv
       hash: md5
-      md5: 44c12e80d0d256b19e2960ad5220fcaa
-      size: 6267
+      md5: d312deaccef6760ed623a7463ab438df
+      size: 5474
     - path: data/processed/X_train.csv
       hash: md5
-      md5: 8a1e51ac6fe025f832a46efed7f520da
-      size: 24692
+      md5: e878764584a887741d4af190cd2046c0
+      size: 21670
     - path: data/processed/y_test.csv
       hash: md5
-      md5: 8fb2b7f01a6efffb34dc0004431fd979
-      size: 391
+      md5: 3fc1a9e381714ea591dbb3d0cb331087
+      size: 339
     - path: data/processed/y_train.csv
       hash: md5
-      md5: ccb752c1afdf4ecf9f6a103724baa717
-      size: 1509
+      md5: 714ff6ce199ec2e0de7cc51aec5d0982
+      size: 1305
     - path: models
       hash: md5
-      md5: 7799961193f65f1837c8eba40afe3938.dir
-      size: 859
-      nfiles: 1
+      md5: e34516f066be60d525ac2e6c9aff9988.dir
+      size: 6013
+      nfiles: 7
     - path: src/stages/evaluate_model.py
       hash: md5
-      md5: 3c1f9c78b1cd49f8e830cc749d5c5a45
-      size: 2560
+      md5: 2b844e8591427390942eebd577092c16
+      size: 4111
     outs:
     - path: reports
       hash: md5
-      md5: a7219ad725be2c4967e767292a94331b.dir
-      size: 1104
-      nfiles: 1
+      md5: faf83a92e11d4be25a83d2dad84af39e.dir
+      size: 7428
+      nfiles: 7
