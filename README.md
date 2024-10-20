@@ -6,7 +6,25 @@
 
 MLOPs Team Project
 
-## Team 21
+## Project Setup
+
+### git
+    ```git clone https://github.com/A01794892-tec-mx/MLOpsEq21.git```
+
+### cmd 
+
+!!!Run as administrator
+
+```
+cd <directorio_local>
+python -m venv MLOpsEq21_venv
+.\MLOpsEq21_venv\Scripts\activate
+pip install -r requirements.txt
+cd mlops
+docker-compose --env-file config.env up -d --build
+```
+
+## Team 21 - Structure Reference
 
 ```
 ├── LICENSE            <- Open-source license if one is chosen
