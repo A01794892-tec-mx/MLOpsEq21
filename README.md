@@ -9,9 +9,10 @@ MLOPs Team Project
 ## Project Setup
 
 ### GIT
-    ```
-    git clone https://github.com/A01794892-tec-mx/MLOpsEq21.git
-    ```
+
+```
+git clone https://github.com/A01794892-tec-mx/MLOpsEq21.git
+```
 
 ### CMD (Windows) 
 
