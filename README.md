@@ -8,12 +8,14 @@ MLOPs Team Project
 
 ## Project Setup
 
-### git
-    ```git clone https://github.com/A01794892-tec-mx/MLOpsEq21.git```
+### GIT
+    ```
+    git clone https://github.com/A01794892-tec-mx/MLOpsEq21.git
+    ```
 
-### cmd 
+### CMD (Windows) 
 
-!!!Run as administrator
+Open a CMD as Administrator
 
 ```
 cd <directorio_local>
