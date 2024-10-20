@@ -22,6 +22,13 @@ MODEL_NAME_KEY = 'modelName'
 OUT_KEY = 'out'
 HOST_KEY = 'host'
 
+#Hyperparameters
+C_KEY = 'C'
+PENALTY_KEY = 'penalty'
+SOLVER_KEY = 'solver'
+MAX_ITER_KEY = 'max_iter'
+RANDOM_STATE_KEY = 'random_state'
+
 STAGES = ["data_load", "data_preproc", "train_lr", "evaluate_model"]
 SCRIPTS = ["src/stages/load_data.py", "src/stages/preprocess_data.py", "src/stages/train_lr.py", "src/stages/evaluate_model.py"]
 
@@ -56,12 +63,19 @@ def run_pipeline_stage(stage_name, script, config):
         mlflow.set_tag("data_version", config[DVC_VERSION_KEY])
         result = run_script(script, config)
 
-        if stage_name == "train_lr":
+        if stage_name == TRAIN_LR_KEY:
             mlflow.log_params(config[TRAIN_LR_KEY])
+
+            mlflow.log_param('C', config[TRAIN_LR_KEY][MODEL_LR_KEY][C_KEY])
+            mlflow.log_param('penalty', config[TRAIN_LR_KEY][MODEL_LR_KEY][PENALTY_KEY])
+            mlflow.log_param('solver', config[TRAIN_LR_KEY][MODEL_LR_KEY][SOLVER_KEY])
+            mlflow.log_param('max_iter', config[TRAIN_LR_KEY][MODEL_LR_KEY][MAX_ITER_KEY])
+            mlflow.log_param('random_state', config[TRAIN_LR_KEY][MODEL_LR_KEY][RANDOM_STATE_KEY])
+            
             run_id = mlflow.active_run().info.run_id
             mlflow.register_model(f"runs:/{run_id}/model", f"{config[TRAIN_LR_KEY][MODEL_LR_KEY][MODEL_NAME_KEY]}", tags={"data_version": config[DVC_VERSION_KEY]})
 
-        if stage_name == "evaluate_model":
+        if stage_name == EVALUATE_MODEL_KEY:
             # Load evaluation metrics from the generated JSON file
             metrics_path = f"{config[EVALUATE_MODEL_KEY][OUT_KEY]}/evaluation_metrics_{config[DVC_VERSION_KEY]}.json"
             with open(metrics_path) as metrics_file:
