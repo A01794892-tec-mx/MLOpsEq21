@@ -1,10 +1,18 @@
-# MLOps
+# MLOPs Team Project
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
 MLOPs Team Project
+
+## Team Member
+JOSUÉ PÉREZ 						A00752186
+LINETH GUERRA 						A01795639
+JOSE GONZALEZ 						A01795755
+EDUARDO RODRIGUEZ 					A01794892
+OMAR JUÁREZ 						A01795499
+JESÚS MARTÍNEZ 						A01740049
 
 ## Project Setup
 
