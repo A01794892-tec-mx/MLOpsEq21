@@ -43,6 +43,12 @@ def train_lr(config_path):
         # Log model parameters (optional)
         mlflow.log_params(config['train_lr']['model_LR'])
 
+        mlflow.log_param('C', config['train_lr']['model_LR']['C'])
+        mlflow.log_param('penalty', config['train_lr']['model_LR']['penalty'])
+        mlflow.log_param('solver', config['train_lr']['model_LR']['solver'])
+        mlflow.log_param('max_iter', config['train_lr']['model_LR']['max_iter'])
+        mlflow.log_param('random_state', config['train_lr']['model_LR']['random_state'])
+
         # Optionally log the model path
         mlflow.log_artifact(model_path)
 

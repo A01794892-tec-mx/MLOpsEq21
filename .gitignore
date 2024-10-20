@@ -4,3 +4,4 @@ mlops/minio_data/
 mlruns/.*
 /models
 /reports
+/mlruns

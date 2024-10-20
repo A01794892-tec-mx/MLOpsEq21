@@ -41,6 +41,14 @@ def run_pipeline_stage(stage_name, script, config):
 
             if stage_name == "train_lr":
                 mlflow.log_params(config[stage_name])
+                
+                mlflow.log_param('C', config['train_lr']['model_LR']['C'])
+                mlflow.log_param('penalty', config['train_lr']['model_LR']['penalty'])
+                mlflow.log_param('solver', config['train_lr']['model_LR']['solver'])
+                mlflow.log_param('max_iter', config['train_lr']['model_LR']['max_iter'])
+                mlflow.log_param('random_state', config['train_lr']['model_LR']['random_state'])
+
+
                 run_id = mlflow.active_run().info.run_id  # Get the current run ID
                 mlflow.register_model(f"runs:/{run_id}/model", f"{config['train_lr']['model_LR']['modelName']}",tags={"data_version": config['dvc_version']})  # Register the model
                             
