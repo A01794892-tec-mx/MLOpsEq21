@@ -1,12 +1,46 @@
-# MLOps
+# MLOPs Team Project
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-A short description of the project.
+MLOPs Team Project
 
-## Project Organization
+## Team Member
+JOSUÉ PÉREZ 						A00752186
+
+LINETH GUERRA 						A01795639
+
+JOSE GONZALEZ 						A01795755
+
+EDUARDO RODRIGUEZ 					A01794892
+
+OMAR JUÁREZ 						A01795499
+
+JESÚS MARTÍNEZ 						A01740049
+
+## Project Setup
+
+### GIT
+
+```
+git clone https://github.com/A01794892-tec-mx/MLOpsEq21.git
+```
+
+### CMD (Windows) 
+
+Open a CMD as Administrator
+
+```
+cd <directorio_local>
+python -m venv MLOpsEq21_venv
+.\MLOpsEq21_venv\Scripts\activate
+pip install -r requirements.txt
+cd mlops
+docker-compose --env-file config.env up -d --build
+```
+
+## Team 21 - Structure Reference
 
 ```
 ├── LICENSE            <- Open-source license if one is chosen
