@@ -160,3 +160,4 @@ Teardown:
 The test suite provides a robust validation framework for the critical functions in the model training pipeline, including data loading, preprocessing, model training, and evaluation. By implementing functional and error-handling tests, this suite helps ensure each function operates reliably and manages errors appropriately, contributing to a stable and predictable pipeline.
 
 ---
+![runiing tests](image.png)
