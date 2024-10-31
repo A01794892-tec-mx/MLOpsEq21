@@ -33,6 +33,7 @@ def evaluate_model(config_path: Text) -> None:
 
     # Load the trained model
     model_path = f"{config[TRAIN_LR][TRAIN_LR_OUT]}/{config[TRAIN_LR][TRAIN_LR_MODEL_LR][MODEL_NAME]}_{config[DVC_VERSION]}.pkl"
+    print("MODEL PATH" + model_path)
     try:
         with open(model_path, 'rb') as f:
             modelLR = pickle.load(f)

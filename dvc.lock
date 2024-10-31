@@ -9,8 +9,8 @@ stages:
       size: 20977
     - path: src/stages/load_data.py
       hash: md5
-      md5: cfd114b0675fe2481d03e2c5c4290cad
-      size: 956
+      md5: f24539ace2ec4e3458a7e26082dbfc11
+      size: 863
     params:
       params.yaml:
         data_load:
@@ -20,19 +20,19 @@ stages:
     outs:
     - path: data/interim/input_forest_fires.csv
       hash: md5
-      md5: 97aaa67d46399fff9e72b85576fe46db
-      size: 21152
+      md5: b7566dc04423e026ceb1fde6cc0ba555
+      size: 18561
   preprocess_data:
     cmd: python src/stages/preprocess_data.py --config=params.yaml
     deps:
     - path: data/interim/input_forest_fires.csv
       hash: md5
-      md5: 97aaa67d46399fff9e72b85576fe46db
-      size: 21152
+      md5: b7566dc04423e026ceb1fde6cc0ba555
+      size: 18561
     - path: src/stages/preprocess_data.py
       hash: md5
-      md5: c9077b1f895bd8af0a646a0a37057748
-      size: 3383
+      md5: 92498d4fa0e6f83223c04e24420f3eb0
+      size: 3312
     params:
       params.yaml:
         data_preproc:
@@ -44,20 +44,20 @@ stages:
     outs:
     - path: data/processed/X_test.csv
       hash: md5
-      md5: 44c12e80d0d256b19e2960ad5220fcaa
-      size: 6267
+      md5: d312deaccef6760ed623a7463ab438df
+      size: 5474
     - path: data/processed/X_train.csv
       hash: md5
-      md5: 8a1e51ac6fe025f832a46efed7f520da
-      size: 24692
+      md5: e878764584a887741d4af190cd2046c0
+      size: 21670
     - path: data/processed/y_test.csv
       hash: md5
-      md5: 8fb2b7f01a6efffb34dc0004431fd979
-      size: 391
+      md5: 3fc1a9e381714ea591dbb3d0cb331087
+      size: 339
     - path: data/processed/y_train.csv
       hash: md5
-      md5: ccb752c1afdf4ecf9f6a103724baa717
-      size: 1509
+      md5: 714ff6ce199ec2e0de7cc51aec5d0982
+      size: 1305
   train_lr:
     cmd: python src/stages/train_lr.py --config=params.yaml
     deps:
@@ -84,7 +84,7 @@ stages:
             C: 100
             solver: liblinear
             max_iter: 1000
-            random_state: 52
+            random_state: 42
           out: models
     outs:
     - path: models
