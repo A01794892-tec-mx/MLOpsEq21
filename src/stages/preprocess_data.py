@@ -37,13 +37,13 @@ def data_pre_proc(config_path: Text) -> None:
     X = X.drop(columns=['day', 'month', 'year'])
 
     # Split the data into training and test sets (80% training, 20% test)
-    X_train_base, X_test_base, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train_base, X_test_base, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=config['base']['random_state'])
 
     # Pipeline for numeric continuous variables: scaling + PCA for dimensionality reduction
     numericas_pipeline = Pipeline( steps=[
         ('minmax', MinMaxScaler()),
         ('scaler', StandardScaler()),
-        ('PCA', PCA(n_components=0.95))
+        ('PCA', PCA(n_components=0.95, random_state=config['base']['random_state']))
     ] )
 
     # Pipeline for categorical variables: one-hot encoding
