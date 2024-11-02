@@ -1,23 +1,27 @@
 """
-TestTrainLRFunction
+Test Suite for the data_pre_proc Function
 
-This test suite is designed to comprehensively test the `train_lr` function, which is responsible for training a 
-logistic regression model, saving it to disk, and logging essential training details in MLflow. The suite covers 
-various aspects of functionality, robustness, and error handling to ensure the model training process works as 
-expected under different scenarios.
+Test Cases:
+1. Functional Test (test_data_pre_proc_functional):
+   - Runs data_pre_proc on sample input data to verify end-to-end processing and output file creation.
+   - Asserts that output files (X_train, X_test, y_train, y_test) are created and contain expected data.
 
-The test cases included in this suite are:
+2. Invalid Configuration File (test_invalid_config_file):
+   - Tests data_pre_proc with an invalid or missing configuration file.
+   - Expects an error to be raised if the configuration file is malformed or unreadable.
 
-1. `test_train_lr_functional`: Performs a full functional test to validate that the logistic regression model 
-   is trained with correct parameters, saved in the designated output path, and that relevant parameters are 
-   logged accurately in MLflow.
-2. `test_invalid_model_params`: Tests that `train_lr` raises an appropriate error when given an unsupported 
-   model parameter (e.g., an invalid penalty term), verifying that configuration validation is functioning.
-3. `test_missing_input_files`: Ensures the function raises a `FileNotFoundError` if input data files are 
-   missing, which would prevent model training from proceeding.
-4. `test_output_directory_creation`: Verifies that `train_lr` creates the specified output directory if it 
-   doesn't already exist, allowing the model file to be saved in a previously nonexistent path.
+3. Empty Data File (test_empty_data_file):
+   - Ensures output files are created even if the input data file is empty, confirming that the function can handle empty datasets.
+
+4. Data Splitting Integrity (test_data_splitting_integrity):
+   - Verifies that both training and test sets are created and contain data, regardless of precise split proportions.
+
+5. Feature and Label Separation (test_feature_label_separation):
+   - Confirms the target label (`Classes` column) is properly separated into `y`, while features remain in `X`.
+
+Each test is self-contained and performs any necessary setup and cleanup to leave the test environment unchanged after execution.
 """
+
 
 
 import unittest
