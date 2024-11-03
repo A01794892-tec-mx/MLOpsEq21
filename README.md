@@ -47,32 +47,46 @@ Use the params.yaml file to define the seed to avoid repeating it across differe
 ### Workflow Pipeline
 Always use pipeline execution to ensure the correct sequence of steps:
 
-
+```
 python ./src/mlops/mlopsPipe.py --config ./params.yaml
+```
 
 ### Data Versioning
 The information currently monitored for changes with DVC includes:
 
+```
 ./data
 ./models
 ./reports
+```
 
 Add a file or folder to version control:
+
+```
 dvc add <file_or_folder_path>
+```
 
 Commit with a change:
+```
 dvc commit -m "commit message"
+```
 
 Push changes:
+```
 dvc push
+```
 
 Pull changes:
+```
 dvc pull
+```
 
 ### Model Versioning
 The models are stored in:
 
+```
 ./models
+```
 
 The models are versioned using the same DVC commands mentioned previously.
 
