@@ -39,6 +39,47 @@ pip install -r requirements.txt
 cd mlops
 docker-compose --env-file config.env up -d --build
 ```
+## Reproducibility Guidelines
+
+### Repeatable Splitting
+Use the params.yaml file to define the seed to avoid repeating it across different files.
+
+### Workflow Pipeline
+Always use pipeline execution to ensure the correct sequence of steps:
+
+
+python ./src/mlops/mlopsPipe.py --config ./params.yaml
+
+### Data Versioning
+The information currently monitored for changes with DVC includes:
+
+./data
+./models
+./reports
+
+Add a file or folder to version control:
+dvc add <file_or_folder_path>
+
+Commit with a change:
+dvc commit -m "commit message"
+
+Push changes:
+dvc push
+
+Pull changes:
+dvc pull
+
+### Model Versioning
+The models are stored in:
+
+./models
+
+The models are versioned using the same DVC commands mentioned previously.
+
+### Environment Versioning
+The text file requirements.txt contains all the dependencies used by our application
+
+The Dockerfile contains all the necessary instructions for environment setup, as well as the subsequent installation of dependencies, to ultimately run the application and expose it via Docker networking.
 
 ## Team 21 - Structure Reference
 
