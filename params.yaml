@@ -23,7 +23,7 @@ train_lr:
   in_y_train: 'data/processed/y_train.csv'
 
   model_LR:
-    modelName: 'modelLR'
+    modelName: 'fire_forest_LR_model'
     penalty: 'l2'
     C: 100
     solver: 'liblinear'
@@ -42,4 +42,4 @@ evaluate_model:
 
 mlflow:
   host: "http://localhost:5000"
-  experiment_name: "Algerian_Forest_Fires_Experiment"
+  experiment_name: "LR_Forest_Fires_Experiment"

@@ -1,4 +1,3 @@
-import pickle
 import argparse
 from typing import Text
 from sklearn import metrics
@@ -6,13 +5,14 @@ import yaml
 import pandas as pd
 import json
 import os
+import mlflow.pyfunc
 
 # Global Constants for Config Keys
-TRAIN_LR = 'train_lr'
-TRAIN_LR_OUT = 'out'
-TRAIN_LR_MODEL_LR = 'model_LR'
-MODEL_NAME = 'modelName'
-DVC_VERSION = 'dvc_version'
+TRAIN_LR_KEY = 'train_lr'
+MODEL_LR_KEY = 'model_LR'
+MODEL_NAME_KEY = 'modelName'
+MLFLOW_KEY = 'mlflow'
+EXPERIMENT_NAME_KEY = 'experiment_name'
 EVALUATE_MODEL = 'evaluate_model'
 IN_X_TRAIN = 'in_X_train'
 IN_X_TEST = 'in_X_test'
@@ -31,17 +31,19 @@ def evaluate_model(config_path: Text) -> None:
         print(f"Error: Failed to parse YAML file. {e}")
         return
 
-    # Load the trained model
-    model_path = f"{config[TRAIN_LR][TRAIN_LR_OUT]}/{config[TRAIN_LR][TRAIN_LR_MODEL_LR][MODEL_NAME]}_{config[DVC_VERSION]}.pkl"
-    print("MODEL PATH" + model_path)
+    # Fetch the latest model from MLflow Model Registry
+    mlflow.set_tracking_uri(config['mlflow']['host'])
+    client = mlflow.tracking.MlflowClient()
+
     try:
-        with open(model_path, 'rb') as f:
-            modelLR = pickle.load(f)
-    except FileNotFoundError:
-        print(f"Error: Model file '{model_path}' not found.")
-        return
-    except pickle.PickleError as e:
-        print(f"Error: Failed to load the model. {e}")
+        model_name = config[TRAIN_LR_KEY][MODEL_LR_KEY][MODEL_NAME_KEY]
+        model_versions = client.search_model_versions(f"name='{model_name}'")
+        latest_version = max(model_versions, key=lambda mv: int(mv.version))
+        model_uri = f"models:/{model_name}/{latest_version.version}"
+        model = mlflow.pyfunc.load_model(model_uri)
+        print(f"Loaded model: {model_name}, version: {latest_version.version}")
+    except Exception as e:
+        print(f"Error: Failed to retrieve model from MLflow. {e}")
         return
 
     # Load datasets
@@ -59,18 +61,18 @@ def evaluate_model(config_path: Text) -> None:
 
     # Make predictions
     try:
-        y_pred_trainRL = modelLR.predict(X_train)
-        y_pred_testRL = modelLR.predict(X_test)
+        y_pred_train = model.predict(X_train)
+        y_pred_test = model.predict(X_test)
     except ValueError as e:
         print(f"Error: Failed to make predictions. {e}")
         return
 
     # Calculate evaluation metrics
     try:
-        accuracy_train = metrics.accuracy_score(y_train, y_pred_trainRL)
-        accuracy_test = metrics.accuracy_score(y_test, y_pred_testRL)
-        confusion_matrix = metrics.confusion_matrix(y_test, y_pred_testRL)
-        classification_report = metrics.classification_report(y_test, y_pred_testRL, output_dict=True)
+        accuracy_train = metrics.accuracy_score(y_train, y_pred_train)
+        accuracy_test = metrics.accuracy_score(y_test, y_pred_test)
+        confusion_matrix = metrics.confusion_matrix(y_test, y_pred_test)
+        classification_report = metrics.classification_report(y_test, y_pred_test, output_dict=True)
     except ValueError as e:
         print(f"Error: Failed to calculate evaluation metrics. {e}")
         return
@@ -81,7 +83,7 @@ def evaluate_model(config_path: Text) -> None:
     print("\nConfusion Matrix:")
     print(confusion_matrix)
     print("\nClassification Report:")
-    print(metrics.classification_report(y_test, y_pred_testRL))
+    print(metrics.classification_report(y_test, y_pred_test))
 
     # Create a dictionary to hold all metrics
     evaluation_metrics = {
@@ -92,11 +94,11 @@ def evaluate_model(config_path: Text) -> None:
     }
 
     # Save the metrics to a JSON file
-    output_dir = config[EVALUATE_MODEL][EVALUATE_MODEL_OUT]  # Output directory for metrics
+    output_dir = config[EVALUATE_MODEL][EVALUATE_MODEL_OUT]
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    metrics_path = os.path.join(output_dir, f"evaluation_metrics_{config[DVC_VERSION]}.json")
+    metrics_path = os.path.join(output_dir, f"evaluation_metrics_{config['dvc_version']}.json")
     try:
         with open(metrics_path, 'w') as f:
             json.dump(evaluation_metrics, f, indent=4)
