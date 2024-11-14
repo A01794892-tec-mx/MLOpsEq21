@@ -5,3 +5,5 @@ pandas
 PyYAML
 scikit_learn
 pytest
+dvc
+numpy
