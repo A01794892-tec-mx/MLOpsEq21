@@ -4,3 +4,4 @@ mlflow_skinny
 pandas
 PyYAML
 scikit_learn
+pytest
