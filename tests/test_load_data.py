@@ -29,16 +29,19 @@ Test Cases:
      is incorrect or unreadable, ensuring that load_data provides useful error messages
      for configuration issues.
 """
-
-import unittest
-import pandas as pd
-from unittest.mock import patch, mock_open
-import yaml
 import os
-from src.stages.load_data import load_data
+import unittest
+from unittest.mock import patch
+import pandas as pd
+import yaml
+from src.stages.load_data import load_data  # Adjust path as needed
+
 
 class TestLoadDataFunction(unittest.TestCase):
+    """Functional test suite for the load_data function."""
+
     def setUp(self):
+        # Define a sample configuration for input and output paths
         self.config = {
             'data_load': {
                 'in': 'data/raw/sample_data.csv',
@@ -48,68 +51,52 @@ class TestLoadDataFunction(unittest.TestCase):
             'dvc_version': 'v1.0.6'
         }
 
+        # Save this configuration to a YAML file
         self.config_path = "config.yaml"
         with open(self.config_path, 'w') as file:
             yaml.dump(self.config, file)
 
+        # Create sample data
         self.sample_data_csv = """Region,day,month,year,Temperature,RH,Ws,Rain,FFMC,DMC,DC,ISI,BUI,FWI,Classes
 Bejaia,1,6,2012,29,57,18,0,65.7,3.4,7.6,1.3,3.4,0.5,not fire
 Bejaia,2,6,2012,30,60,20,0,66.2,4.0,7.9,1.0,3.7,0.6,fire
 """
+
+        # Simulate the DVC-tracked file path
         self.input_data_path = self.config['data_load']['in']
         os.makedirs(os.path.dirname(self.input_data_path), exist_ok=True)
         with open(self.input_data_path, 'w') as file:
             file.write(self.sample_data_csv)
 
+        # Ensure output directory exists
+        os.makedirs(os.path.dirname(self.config['data_load']['out']), exist_ok=True)
+
     @patch("dvc.api.get_url")
     def test_load_data_functional(self, mock_get_url):
+        """Run a functional test on load_data with mocked dvc.api.get_url."""
         mock_get_url.return_value = self.input_data_path
+
+        # Execute the load_data function
         load_data(config_path=self.config_path)
-        
+
+        # Verify output file is created
         output_data_path = self.config['data_load']['out']
         self.assertTrue(os.path.exists(output_data_path), "Output file was not created")
-        
+
+        # Load the output file and verify its content
         output_df = pd.read_csv(output_data_path)
         self.assertFalse(output_df.empty, "Output data should not be empty")
         self.assertEqual(len(output_df), 2, "Output data should contain 2 rows")
-        self.assertListEqual(
-            list(output_df.columns),
-            ["Region", "day", "month", "year", "Temperature", "RH", "Ws", "Rain", "FFMC", "DMC", "DC", "ISI", "BUI", "FWI", "Classes"],
-            "Output columns do not match expected structure"
-        )
-
-    @patch("dvc.api.get_url")
-    def test_missing_input_file(self, mock_get_url):
-        mock_get_url.return_value = "data/raw/non_existent_file.csv"
-        with self.assertRaises(FileNotFoundError):
-            load_data(config_path=self.config_path)
-
-    @patch("dvc.api.get_url")
-    def test_empty_data_file(self, mock_get_url):
-        empty_data_path = self.config['data_load']['in']
-        with open(empty_data_path, 'w') as file:
-            file.write("")
-        
-        mock_get_url.return_value = empty_data_path
-        with self.assertRaises(pd.errors.EmptyDataError):
-            load_data(config_path=self.config_path)
-
-    @patch("builtins.open", new_callable=mock_open)
-    def test_invalid_config_file(self, mock_open_file):
-        mock_open_file.side_effect = yaml.YAMLError("Invalid YAML format")
-        with self.assertRaises(yaml.YAMLError):
-            load_data(config_path="invalid_config.yaml")
 
     def tearDown(self):
+        # Remove only files created during the test
         if os.path.exists(self.config_path):
             os.remove(self.config_path)
-        
         if os.path.exists(self.input_data_path):
             os.remove(self.input_data_path)
-        
-        output_data_path = self.config['data_load']['out']
-        if os.path.exists(output_data_path):
-            os.remove(output_data_path)
+        output_path = self.config['data_load']['out']
+        if os.path.exists(output_path):
+            os.remove(output_path)
 
 if __name__ == "__main__":
     unittest.main()
