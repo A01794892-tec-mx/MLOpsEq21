@@ -1,0 +1,6 @@
+outs:
+- md5: fdd842d2bc0e26af783794df6990168a.dir
+  size: 2544
+  nfiles: 3
+  hash: md5
+  path: fastapi
