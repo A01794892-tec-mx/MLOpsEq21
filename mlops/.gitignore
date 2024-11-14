@@ -7,3 +7,4 @@ minio_data/*
 
 
 +!.gitkeep
+/fastapi
