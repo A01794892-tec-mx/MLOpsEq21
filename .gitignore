@@ -5,3 +5,4 @@ mlruns/.*
 /models
 /reports
 /mlruns
+__pycache__/
