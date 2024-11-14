@@ -31,14 +31,19 @@ Test Cases:
 """
 import os
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, mock_open
 import pandas as pd
 import yaml
-from src.stages.load_data import load_data  # Adjust path as needed
+from src.stages.load_data import load_data
 
 
 class TestLoadDataFunction(unittest.TestCase):
-    """Functional test suite for the load_data function."""
+    """
+    Functional test suite for the `load_data` function to ensure it correctly handles:
+    - Successful data loading and processing.
+    - Error handling for missing input files and invalid configurations.
+    - Handling of empty data files.
+    """
 
     def setUp(self):
         # Define a sample configuration for input and output paths
@@ -73,10 +78,10 @@ Bejaia,2,6,2012,30,60,20,0,66.2,4.0,7.9,1.0,3.7,0.6,fire
 
     @patch("dvc.api.get_url")
     def test_load_data_functional(self, mock_get_url):
-        """Run a functional test on load_data with mocked dvc.api.get_url."""
+        """Run a functional test on load_data with mocked `dvc.api.get_url`."""
         mock_get_url.return_value = self.input_data_path
 
-        # Execute the load_data function
+        # Execute the `load_data` function
         load_data(config_path=self.config_path)
 
         # Verify output file is created
@@ -87,16 +92,49 @@ Bejaia,2,6,2012,30,60,20,0,66.2,4.0,7.9,1.0,3.7,0.6,fire
         output_df = pd.read_csv(output_data_path)
         self.assertFalse(output_df.empty, "Output data should not be empty")
         self.assertEqual(len(output_df), 2, "Output data should contain 2 rows")
+        self.assertListEqual(
+            list(output_df.columns),
+            ["Region", "day", "month", "year", "Temperature", "RH", "Ws", "Rain", "FFMC", "DMC", "DC", "ISI", "BUI", "FWI", "Classes"],
+            "Output columns do not match expected structure"
+        )
+
+    @patch("dvc.api.get_url")
+    def test_missing_input_file(self, mock_get_url):
+        """Test handling of missing input files."""
+        mock_get_url.return_value = "data/raw/non_existent_file.csv"
+        with self.assertRaises(FileNotFoundError):
+            load_data(config_path=self.config_path)
+
+    @patch("dvc.api.get_url")
+    def test_empty_data_file(self, mock_get_url):
+        """Test handling of empty data files."""
+        empty_data_path = self.config['data_load']['in']
+        with open(empty_data_path, 'w') as file:
+            file.write("")
+
+        mock_get_url.return_value = empty_data_path
+        with self.assertRaises(pd.errors.EmptyDataError):
+            load_data(config_path=self.config_path)
+
+    @patch("builtins.open", new_callable=mock_open)
+    def test_invalid_config_file(self, mock_open_file):
+        """Test handling of invalid configuration files."""
+        mock_open_file.side_effect = yaml.YAMLError("Invalid YAML format")
+        with self.assertRaises(yaml.YAMLError):
+            load_data(config_path="invalid_config.yaml")
 
     def tearDown(self):
         # Remove only files created during the test
         if os.path.exists(self.config_path):
             os.remove(self.config_path)
+
         if os.path.exists(self.input_data_path):
             os.remove(self.input_data_path)
-        output_path = self.config['data_load']['out']
-        if os.path.exists(output_path):
-            os.remove(output_path)
+
+        output_data_path = self.config['data_load']['out']
+        if os.path.exists(output_data_path):
+            os.remove(output_data_path)
+
 
 if __name__ == "__main__":
     unittest.main()
