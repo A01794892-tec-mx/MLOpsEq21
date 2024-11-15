@@ -42,4 +42,4 @@ evaluate_model:
 
 mlflow:
   host: "http://localhost:5000"
-  experiment_name: "LR_Forest_Fires_Experiment"
+  experiment_name: "LR_Forest_Fires_Exp"
