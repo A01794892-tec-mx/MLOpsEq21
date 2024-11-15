@@ -11,25 +11,39 @@ import os
 TRAIN_LR_KEY = 'train_lr'
 MODEL_LR_KEY = 'model_LR'
 MODEL_NAME_KEY = 'modelName'
+MLFLOW_KEY = 'mlflow'
+EXPERIMENT_NAME_KEY = 'experiment_name'
+MLFLOW_HOST_KEY = 'mlflow'
+MLFLOW_EXPERIMENT_KEY = 'experiment_name'
 
-#Hyperparameters
+# Hyperparameters
 C_KEY = 'C'
 PENALTY_KEY = 'penalty'
 SOLVER_KEY = 'solver'
 MAX_ITER_KEY = 'max_iter'
 RANDOM_STATE_KEY = 'random_state'
 
-
 def train_lr(config_path):
     with open(config_path) as conf_file:
         config = yaml.safe_load(conf_file)
+
+    # Set MLflow tracking URI
+    mlflow.set_tracking_uri(config['mlflow']['host'])
     
+    # Get experiment name from config
+    experiment_name = f"/{config[MLFLOW_HOST_KEY][MLFLOW_EXPERIMENT_KEY]}/"
+    mlflow.set_experiment(experiment_name)
+
+
     # Start MLflow run
-    with mlflow.start_run():  # Remove experiment setting here
+    with mlflow.start_run(run_name="train_lr") as run:
+        # Set data version tag for the run
+        mlflow.set_tag("data_version", config['dvc_version'])
+
         # Load training data
         X_train = pd.read_csv(config[TRAIN_LR_KEY]['in_X_train'])
         y_train = pd.read_csv(config[TRAIN_LR_KEY]['in_y_train'])
-        
+
         # Train Logistic Regression model
         model = LogisticRegression(
             penalty=config[TRAIN_LR_KEY][MODEL_LR_KEY][PENALTY_KEY],
@@ -40,29 +54,36 @@ def train_lr(config_path):
         )
         model.fit(X_train, np.ravel(y_train))
 
-        model_dir = config[TRAIN_LR_KEY]['out']
-        if not os.path.exists(model_dir):
-            os.makedirs(model_dir)
-
-        # Save the model locally
-        model_path = f"{model_dir}/{config[TRAIN_LR_KEY][MODEL_LR_KEY][MODEL_NAME_KEY]}_{config['dvc_version']}.pkl"
-        with open(model_path, 'wb') as f:
-            pickle.dump(model, f)
-        
         # Log the model to MLflow
-        mlflow.sklearn.log_model(model, artifact_path="model", registered_model_name=config[TRAIN_LR_KEY][MODEL_LR_KEY][MODEL_NAME_KEY])
+        artifact_path = "model"
+        mlflow.sklearn.log_model(
+            sk_model=model, 
+            artifact_path=artifact_path
+        )
 
-        # Log model parameters (optional)
+        # Register the model in the Model Registry
+        run_id = run.info.run_id
+        model_name = config[TRAIN_LR_KEY][MODEL_LR_KEY][MODEL_NAME_KEY]
+        registered_model = mlflow.register_model(
+            model_uri=f"runs:/{run_id}/{artifact_path}",
+            name=model_name
+        )
+
+        # Add the `data_version` tag to the registered model version
+        client = mlflow.tracking.MlflowClient()
+        client.set_model_version_tag(
+            name=registered_model.name,
+            version=registered_model.version,
+            key="data_version",
+            value=config['dvc_version']
+        )
+
+        # Log model parameters
         mlflow.log_params(config[TRAIN_LR_KEY][MODEL_LR_KEY])
 
-        mlflow.log_param('C', config[TRAIN_LR_KEY][MODEL_LR_KEY][C_KEY])
-        mlflow.log_param('penalty', config[TRAIN_LR_KEY][MODEL_LR_KEY][PENALTY_KEY])
-        mlflow.log_param('solver', config[TRAIN_LR_KEY][MODEL_LR_KEY][SOLVER_KEY])
-        mlflow.log_param('max_iter', config[TRAIN_LR_KEY][MODEL_LR_KEY][MAX_ITER_KEY])
-        mlflow.log_param('random_state', config[TRAIN_LR_KEY][MODEL_LR_KEY][RANDOM_STATE_KEY])
-
-        # Optionally log the model path
-        mlflow.log_artifact(model_path)
+        print(f"Model trained and registered in MLflow under experiment: {experiment_name}")
+        print(f"Run ID: {run.info.run_id}")
+        print(f"Model registered with version: {registered_model.version}")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

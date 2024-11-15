@@ -4,8 +4,9 @@ import yaml
 import mlflow
 import argparse
 import json
-import dvc.api  # Importing DVC API to fetch data
+import dvc.api
 
+# Paths and Keys
 VENV_DIR = "MLOpsEq21_venv"
 PYTHON_SCRIPT_DIR = "Scripts"
 PYTHON_EXECUTABLE_NAME = "python.exe"
@@ -22,7 +23,7 @@ MODEL_NAME_KEY = 'modelName'
 OUT_KEY = 'out'
 HOST_KEY = 'host'
 
-#Hyperparameters
+# Hyperparameters
 C_KEY = 'C'
 PENALTY_KEY = 'penalty'
 SOLVER_KEY = 'solver'
@@ -59,38 +60,32 @@ def run_script(script, config):
         raise
 
 def run_pipeline_stage(stage_name, script, config):
-    with mlflow.start_run(run_name=stage_name):
-        mlflow.set_tag("data_version", config[DVC_VERSION_KEY])
-        result = run_script(script, config)
+    print(f"""########   Running {stage_name} stage #######""")
+    # Set up MLflow experiment
+    mlflow.set_tracking_uri(config[MLFLOW_HOST_KEY][HOST_KEY])
+    mlflow.set_experiment(f"/{config[MLFLOW_HOST_KEY][MLFLOW_EXPERIMENT_KEY]}/")
+    
+    if stage_name == TRAIN_LR_KEY:
+        run_script(script, config)
+    
+    else:
+        with mlflow.start_run(run_name=stage_name):
+            mlflow.set_tag("data_version", config[DVC_VERSION_KEY])
+            run_script(script, config)
 
-        if stage_name == TRAIN_LR_KEY:
-            mlflow.log_params(config[TRAIN_LR_KEY])
-
-            mlflow.log_param('C', config[TRAIN_LR_KEY][MODEL_LR_KEY][C_KEY])
-            mlflow.log_param('penalty', config[TRAIN_LR_KEY][MODEL_LR_KEY][PENALTY_KEY])
-            mlflow.log_param('solver', config[TRAIN_LR_KEY][MODEL_LR_KEY][SOLVER_KEY])
-            mlflow.log_param('max_iter', config[TRAIN_LR_KEY][MODEL_LR_KEY][MAX_ITER_KEY])
-            mlflow.log_param('random_state', config[TRAIN_LR_KEY][MODEL_LR_KEY][RANDOM_STATE_KEY])
-            
-            run_id = mlflow.active_run().info.run_id
-            mlflow.register_model(f"runs:/{run_id}/model", f"{config[TRAIN_LR_KEY][MODEL_LR_KEY][MODEL_NAME_KEY]}", tags={"data_version": config[DVC_VERSION_KEY]})
-
-        if stage_name == EVALUATE_MODEL_KEY:
-            # Load evaluation metrics from the generated JSON file
-            metrics_path = f"{config[EVALUATE_MODEL_KEY][OUT_KEY]}/evaluation_metrics_{config[DVC_VERSION_KEY]}.json"
-            with open(metrics_path) as metrics_file:
-                evaluation_metrics = json.load(metrics_file)
-                # Log metrics to MLflow
-                mlflow.log_metric("accuracy_train", evaluation_metrics["accuracy_train"])
-                mlflow.log_metric("accuracy_test", evaluation_metrics["accuracy_test"])
+            if stage_name == EVALUATE_MODEL_KEY:
+                # Load evaluation metrics from the generated JSON file
+                metrics_path = f"{config[EVALUATE_MODEL_KEY][OUT_KEY]}/evaluation_metrics_{config[DVC_VERSION_KEY]}.json"
+                with open(metrics_path) as metrics_file:
+                    evaluation_metrics = json.load(metrics_file)
+                    mlflow.log_metric("accuracy_train", evaluation_metrics["accuracy_train"])
+                    mlflow.log_metric("accuracy_test", evaluation_metrics["accuracy_test"])
+    
+    print(f"Stage {stage_name} completed successfully.\n")
 
 def main(config_path):
     with open(config_path) as conf_file:
         config = yaml.safe_load(conf_file)
-
-    # Set up MLFlow tracking
-    mlflow.set_tracking_uri(config[MLFLOW_HOST_KEY][HOST_KEY])
-    mlflow.set_experiment(f"/{config[MLFLOW_HOST_KEY][MLFLOW_EXPERIMENT_KEY]}/")
 
     for stage_name, script in zip(STAGES, SCRIPTS):
         run_pipeline_stage(stage_name, script, config)
